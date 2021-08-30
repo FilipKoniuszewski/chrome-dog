@@ -5,12 +5,12 @@ window.addEventListener("load", function (){
             this.initKeyEvents(this.gameChar.gameChar, this.gameChar.posY)
         },
         gameChar : {
-            gameChar: document.getElementById("game-character"),
+            gameChar: document.querySelector(".game-character"),
             posY: 450
         },
         enemy : {
             enemy: document.getElementById("game-enemy"),
-            posEnemy: 980
+            posEnemy: 930
         },
         startGame : function (){
             setInterval(function (){
@@ -21,10 +21,13 @@ window.addEventListener("load", function (){
             },10)
         },
         moveEnemy: function (){
-            game.enemy.posEnemy -= 1;
+            game.enemy.posEnemy -= 2;
             game.enemy.enemy.style.left = game.enemy.posEnemy + "px";
-            if (game.enemy.posEnemy === 0){
-                game.enemy.enemy.remove();
+            if (game.enemy.posEnemy === -50){
+                game.enemy.posEnemy = 930;
+            }
+            if (game.enemy.posEnemy == 0 && game.gameChar.posY == 450){
+                alert("ups");
             }
         },
         addGravity : function (){
@@ -51,14 +54,16 @@ window.addEventListener("load", function (){
     }
     function duck(event){
         if (event.key === "ArrowDown" && game.gameChar.posY === 450){
-            game.gameChar.posY += 25;
-            game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+            game.gameChar.gameChar.removeAttribute("style");
+            game.gameChar.gameChar.classList.remove("game-character-full");
+            game.gameChar.gameChar.classList.add("game-character-ducked");
         }
     }
     function unDuck(event){
-        if (event.key === "ArrowDown" && game.gameChar.posY === 475){
-            game.gameChar.posY = 450;
-            game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+        if (event.key === "ArrowDown"){
+            game.gameChar.gameChar.removeAttribute("style");
+            game.gameChar.gameChar.classList.remove("game-character-ducked");
+            game.gameChar.gameChar.classList.add("game-character-full");
         }
     }
 })
