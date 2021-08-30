@@ -8,10 +8,8 @@ window.addEventListener("load", function (){
             gameChar: document.querySelector(".game-character"),
             posY: 450
         },
-        enemy : {
-            enemy: document.getElementById("game-enemy"),
-            posEnemy: 930
-        },
+        enemy : new Enemy(),
+
         startGame : function (){
             setInterval(function (){
                 let gameScore = document.getElementById("game-score");
@@ -21,18 +19,20 @@ window.addEventListener("load", function (){
             },10)
         },
         moveEnemy: function (){
-            game.enemy.posEnemy -= 2;
+            game.enemy.posEnemy -= 5;
             game.enemy.enemy.style.left = game.enemy.posEnemy + "px";
             if (game.enemy.posEnemy === -50){
-                game.enemy.posEnemy = 930;
+                game.enemy.enemy.remove()
+                game.enemy = new Enemy();
+
             }
-            if (game.enemy.posEnemy == 0 && game.gameChar.posY == 450){
+            if (game.enemy.posEnemy === 0 && game.gameChar.posY > 390){
                 alert("ups");
             }
         },
         addGravity : function (){
             if (game.gameChar.posY < 450){
-                game.gameChar.posY += 1;
+                game.gameChar.posY += 2;
                 game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
             }
         },
@@ -44,6 +44,16 @@ window.addEventListener("load", function (){
     };
     game.init()
 
+    function Enemy(){
+        let gameField = document.getElementById("game-container");
+        let enemy = document.createElement("div");
+        let enemyClasses = ["enemy-low", "enemy-high", "enemy-double"]
+        enemy.classList.add("game-enemy")
+        enemy.classList.add(enemyClasses[Math.floor(Math.random() * 3)])
+        gameField.appendChild(enemy);
+        this.enemy = enemy;
+        this.posEnemy = 930;
+    }
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.gameChar.posY === 450) {

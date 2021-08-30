@@ -21,11 +21,27 @@
     background-size: 50px 25px;
     top: 475px;
 }
-#game-enemy {
-    width: 20px;
-    height: 50px;
-    background-color: black;
+.game-enemy {
     position: relative;
+}
+.enemy-low{
+    background-color: black;
+    height: 25px;
+    width: 25px;
+    top: 475px;
+    left: 925px;
+}
+.enemy-high{
+    background-color: pink;
+    height: 75px;
+    width: 50px;
+    top: 425px;
+    left: 900px;
+}
+.enemy-double{
+    background-color: red;
+    height: 50px;
+    width: 100px;
     top: 450px;
-    left: 930px;
+    left: 850px;
 }
