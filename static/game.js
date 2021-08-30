@@ -14,32 +14,51 @@ window.addEventListener("load", function (){
         },
         startGame : function (){
             setInterval(function (){
-                game.enemy.posEnemy -= 1;
-                game.enemy.enemy.style.left = game.enemy.posEnemy + "px";
-                if (game.enemy.posEnemy === 0){
-                    game.enemy.enemy.remove();
-                }
-                if (game.gameChar.posY < 450){
-                    game.gameChar.posY += 5;
-                    game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
-                }
+                let gameScore = document.getElementById("game-score");
+                gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
+                game.moveEnemy();
+                game.addGravity();
             },10)
         },
+        moveEnemy: function (){
+            game.enemy.posEnemy -= 1;
+            game.enemy.enemy.style.left = game.enemy.posEnemy + "px";
+            if (game.enemy.posEnemy === 0){
+                game.enemy.enemy.remove();
+            }
+        },
+        addGravity : function (){
+            if (game.gameChar.posY < 450){
+                game.gameChar.posY += 1;
+                game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+            }
+        },
         initKeyEvents : function (){
-            window.addEventListener("keydown", function (event) {
-                if (event.key === " " || event.key === "ArrowUp") {
-                    if (game.gameChar.posY > 0) {
-                        game.gameChar.posY -= 50;
-                        game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
-                    }
-                }else if (event.key === "ArrowDown"){
-                    if (game.gameChar.posY < 450) {
-                        game.gameChar.posY += 25;
-                        game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
-                    }
-                }
-            })
+            window.addEventListener("keydown", jump)
+            window.addEventListener("keydown", duck)
+            window.addEventListener("keyup", unDuck)
         }
     };
     game.init()
+
+    function jump(event) {
+        if (event.key === " " || event.key === "ArrowUp"){
+            if (game.gameChar.posY === 450) {
+                game.gameChar.posY -= 100;
+                game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+            }
+        }
+    }
+    function duck(event){
+        if (event.key === "ArrowDown" && game.gameChar.posY === 450){
+            game.gameChar.posY += 25;
+            game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+        }
+    }
+    function unDuck(event){
+        if (event.key === "ArrowDown" && game.gameChar.posY === 475){
+            game.gameChar.posY = 450;
+            game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+        }
+    }
 })
