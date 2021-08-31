@@ -25,7 +25,12 @@ window.addEventListener("load", function (){
             },
             addObstacle: function (){
                 let obstacleElem = getObstacleHtmlElem();
-                let pos = parseInt(getComputedStyle(obstacleElem).left);
+                let widthSum = 0;
+                for (let obstacle of game.obstacles.obstacleArray){
+                    widthSum += parseInt(getComputedStyle(obstacle.elem).width);
+                }
+                let pos = 900 - widthSum - parseInt(getComputedStyle(obstacleElem).width);
+                obstacleElem.style.left = pos + "px";
                 this.obstacleArray.push(new Obstacle(obstacleElem, pos))
             },
             removeObstacle: function (obstacle){
@@ -42,7 +47,7 @@ window.addEventListener("load", function (){
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 400){
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 100){
                     game.obstacles.addObstacle();
                 }
                 game.addGravity();
@@ -116,7 +121,6 @@ window.addEventListener("load", function (){
         let obstacle = document.createElement("div");
         let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double"]
         obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
-        // obstacle.classList.add("obstacle-low")
         gameField.appendChild(obstacle);
         return obstacle;
     }
