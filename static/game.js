@@ -8,23 +8,31 @@ window.addEventListener("load", function (){
         },
         player : {
             gameChar: document.querySelector(".player"),
-            pos: 450
+            pos: 450,
+            jumping: false
         },
         obstacles : {
             obstacleArray: [],
             moveObstacle: function (obstacle){
                 obstacle.pos -= 5;
                 obstacle.elem.style.left = obstacle.pos + "px";
+                // document.getElementById("game-container").style.animation = "animation 2.66s linear infinite"
                 if (obstacle.pos === -100){
                     this.removeObstacle(obstacle)
-                    this.addObstacle();
                 }
-                if (obstacle.pos === 0 && game.player.pos > 390){
+                if (obstacle.pos === 0 && game.player.pos > 400){
                     game.gameOver();
                 }
             },
             addObstacle: function (){
-                this.obstacleArray.push(new Obstacle(getObstacleHtmlElem(), 930))
+                let obstacleElem = getObstacleHtmlElem();
+                let widthSum = 0;
+                for (let obstacle of game.obstacles.obstacleArray){
+                    widthSum += parseInt(getComputedStyle(obstacle.elem).width);
+                }
+                let pos = 900 - widthSum - parseInt(getComputedStyle(obstacleElem).width);
+                obstacleElem.style.left = pos + "px";
+                this.obstacleArray.push(new Obstacle(obstacleElem, pos))
             },
             removeObstacle: function (obstacle){
                 obstacle.elem.remove();
@@ -36,18 +44,22 @@ window.addEventListener("load", function (){
             intervalId = setInterval(function (){
                 let gameScore = document.getElementById("game-score");
                 gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
-                if(game.obstacles.obstacleArray.length>0){
-                    game.obstacles.moveObstacle(game.obstacles.obstacleArray[0]);
+
+                game.obstacles.obstacleArray.forEach(function (obstacle){
+                    game.obstacles.moveObstacle(obstacle);
+                })
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 100){
+                    game.obstacles.addObstacle();
                 }
                 game.addGravity();
             },10);
         },
         addGravity : function (){
             if (game.player.pos < 450){
-                game.player.pos += 3;
+                game.player.pos += 5;
                 game.player.gameChar.style.top = game.player.pos + "px";
             }
-            if (game.player.pos === 450){
+            if (game.player.pos === 450 && !game.player.jumping){
                 game.player.gameChar.classList.remove("player-jumping");
                 game.player.gameChar.classList.add("player-full");
             }
@@ -63,10 +75,10 @@ window.addEventListener("load", function (){
             window.removeEventListener("keyup", unDuck)
             clearInterval(intervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
+            document.getElementById("game-background").style.animationPlayState = 'paused';
             document.getElementById("game-result").style.display = "flex";
             document.getElementById("game-result-score").innerText =
                 "Your score: " + document.getElementById("game-score").innerText;
-
         }
     };
     game.init()
@@ -79,10 +91,17 @@ window.addEventListener("load", function (){
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.player.pos === 450) {
+                game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
                 game.player.gameChar.classList.add("player-jumping");
-                game.player.pos -= 150;
-                game.player.gameChar.style.top = game.player.pos + "px";
+                let jumpId = setInterval(function (){
+                    game.player.pos -= 10;
+                    game.player.gameChar.style.top = game.player.pos + "px";
+                    if (game.player.pos < 300) {
+                        clearInterval(jumpId)
+                        game.player.jumping = false;
+                    }
+                },10);
             }
         }
     }

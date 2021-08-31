@@ -1,17 +1,37 @@
+#game-background{
+    width: 1000px;
+    height: 500px;
+    position: absolute;
+    left: 50%;
+    top: 10vh;
+    transform: translate(-50%,0);
+    background:url(/static/images/backgroundv2.jpg) repeat-x 0 / 100% auto;
+    background-size: 1000px 500px;
+    animation: animation 50s linear infinite ;
+    border: 1px solid black;
+}
 #game-container {
     width: 1000px;
     height: 500px;
-    border: 1px solid black;
-    margin: 10vh auto;
     display: flex;
-    background:url(/static/images/background4.jpg) repeat-x 0 / 100% auto;
+    position: absolute;
+    left: 50%;
+    top: 10vh;
+    transform: translate(-50%,0);
+    background:url(/static/images/droga3.png) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
-    animation: animation 20s linear infinite ;
+    animation: animation 4s linear infinite ;
 }
 
 @keyframes animation{
-	0%{background-position: 100vh 0;}
-    100%{background-position: 0vh 0;}
+	0%{background-position: 1000px 0;}
+    100%{background-position: 0px 0;}
+    /*0% {*/
+    /*    transform: translateX(0);*/
+    /*}*/
+    /*100% {*/
+    /*transform: translateX(-50%);*/
+    /*}*/
 }
 .player {
     width: 100px;
@@ -42,7 +62,6 @@
     height: 25px;
     width: 25px;
     top: 475px;
-    left: 925px;
 }
 .obstacle-high{
     position: relative;
@@ -50,7 +69,6 @@
     height: 75px;
     width: 50px;
     top: 425px;
-    left: 900px;
 }
 .obstacle-double{
     position: relative;
@@ -58,7 +76,6 @@
     height: 50px;
     width: 100px;
     top: 450px;
-    left: 850px;
 }
 #game-result{
     display: none;
