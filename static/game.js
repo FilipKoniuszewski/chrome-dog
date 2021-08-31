@@ -8,7 +8,8 @@ window.addEventListener("load", function (){
         },
         player : {
             gameChar: document.querySelector(".player"),
-            pos: 450
+            pos: 450,
+            jumping: false
         },
         obstacles : {
             obstacleArray: [],
@@ -17,14 +18,15 @@ window.addEventListener("load", function (){
                 obstacle.elem.style.left = obstacle.pos + "px";
                 if (obstacle.pos === -100){
                     this.removeObstacle(obstacle)
-                    this.addObstacle();
                 }
-                if (obstacle.pos === 0 && game.player.pos > 390){
+                if (obstacle.pos === 0 && game.player.pos > 400){
                     game.gameOver();
                 }
             },
             addObstacle: function (){
-                this.obstacleArray.push(new Obstacle(getObstacleHtmlElem(), 930))
+                let obstacleElem = getObstacleHtmlElem();
+                let pos = parseInt(getComputedStyle(obstacleElem).left);
+                this.obstacleArray.push(new Obstacle(obstacleElem, pos))
             },
             removeObstacle: function (obstacle){
                 obstacle.elem.remove();
@@ -36,18 +38,22 @@ window.addEventListener("load", function (){
             intervalId = setInterval(function (){
                 let gameScore = document.getElementById("game-score");
                 gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
-                if(game.obstacles.obstacleArray.length>0){
-                    game.obstacles.moveObstacle(game.obstacles.obstacleArray[0]);
+
+                game.obstacles.obstacleArray.forEach(function (obstacle){
+                    game.obstacles.moveObstacle(obstacle);
+                })
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 400){
+                    game.obstacles.addObstacle();
                 }
                 game.addGravity();
             },10);
         },
         addGravity : function (){
             if (game.player.pos < 450){
-                game.player.pos += 3;
+                game.player.pos += 5;
                 game.player.gameChar.style.top = game.player.pos + "px";
             }
-            if (game.player.pos === 450){
+            if (game.player.pos === 450 && !game.player.jumping){
                 game.player.gameChar.classList.remove("player-jumping");
                 game.player.gameChar.classList.add("player-full");
             }
@@ -65,7 +71,6 @@ window.addEventListener("load", function (){
             document.getElementById("game-result").style.display = "flex";
             document.getElementById("game-result-score").innerText =
                 "Your score: " + document.getElementById("game-score").innerText;
-
         }
     };
     game.init()
@@ -78,10 +83,17 @@ window.addEventListener("load", function (){
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.player.pos === 450) {
+                game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
                 game.player.gameChar.classList.add("player-jumping");
-                game.player.pos -= 150;
-                game.player.gameChar.style.top = game.player.pos + "px";
+                let jumpId = setInterval(function (){
+                    game.player.pos -= 10;
+                    game.player.gameChar.style.top = game.player.pos + "px";
+                    if (game.player.pos < 300) {
+                        clearInterval(jumpId)
+                        game.player.jumping = false;
+                    }
+                },10);
             }
         }
     }
@@ -104,6 +116,7 @@ window.addEventListener("load", function (){
         let obstacle = document.createElement("div");
         let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double"]
         obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
+        // obstacle.classList.add("obstacle-low")
         gameField.appendChild(obstacle);
         return obstacle;
     }
