@@ -4,7 +4,7 @@
     border: 1px solid black;
     margin: 10vh auto;
     display: flex;
-    background:url(/static/images/background3.jpg) repeat-x 0 / 100% auto;
+    background:url(/static/images/background4.jpg) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
     animation: animation 20s linear infinite ;
 }
@@ -12,43 +12,63 @@
 	0%{background-position: 100vw 0;}
 	100%{background-position: 0 0;}
 }
-.game-character {
-    width: 50px;
-    background-image: url("images/dog.png");
+.player {
+    width: 100px;
     position: relative;
     top: 450px;
 }
-.game-character-full {
+.player-full {
     height: 50px;
-    background-size: 50px 50px;
+    background-image: url("images/piesek.png");
+    background-size: 100px 50px;
     top: 450px;
 }
-.game-character-ducked {
-    height: 25px;
-    background-size: 50px 25px;
-    top: 475px;
+.player-jumping{
+    height: 50px;
+    background-image: url("images/skaczacy_piesek.png");
+    background-size: 100px 50px;
+    top: 450px;
 }
-.game-enemy {
+.player-ducked {
+    background-image: url("images/skradajacy_piesek.png");
+    height: 40px;
+    background-size: 100px 40px;
+    top: 460px;
+}
+.obstacle-low{
     position: relative;
-}
-.enemy-low{
     background-color: black;
     height: 25px;
     width: 25px;
     top: 475px;
     left: 925px;
 }
-.enemy-high{
+.obstacle-high{
+    position: relative;
     background-color: pink;
     height: 75px;
     width: 50px;
     top: 425px;
     left: 900px;
 }
-.enemy-double{
+.obstacle-double{
+    position: relative;
     background-color: red;
     height: 50px;
     width: 100px;
     top: 450px;
     left: 850px;
+}
+#game-result{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 40vh;
+    background-color: rgba(0,25,255,0.4);
+    position: absolute;
+    top: 20vh;
+    left: 50%;
+    transform: translate(-50%,0);
 }
