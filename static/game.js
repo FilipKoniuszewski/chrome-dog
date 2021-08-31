@@ -62,6 +62,7 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
             clearInterval(intervalId);
+            document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-result").style.display = "flex";
             document.getElementById("game-result-score").innerText =
                 "Your score: " + document.getElementById("game-score").innerText;
