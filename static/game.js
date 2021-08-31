@@ -1,79 +1,110 @@
 window.addEventListener("load", function (){
+    let intervalId;
     const game = {
         init: function (){
-            this.startGame(this.enemy.enemy, this.enemy.posEnemy, this.gameChar.gameChar, this.gameChar.posY)
-            this.initKeyEvents(this.gameChar.gameChar, this.gameChar.posY)
+            this.obstacles.addObstacle();
+            this.startGame(this.obstacles.obstacleArray[0].elem, this.obstacles.obstacleArray[0].pos, this.player.gameChar, this.player.pos)
+            this.initKeyEvents(this.player.gameChar, this.player.pos)
         },
-        gameChar : {
-            gameChar: document.querySelector(".game-character"),
-            posY: 450
+        player : {
+            gameChar: document.querySelector(".player"),
+            pos: 450
         },
-        enemy : new Enemy(),
+        obstacles : {
+            obstacleArray: [],
+            moveObstacle: function (obstacle){
+                obstacle.pos -= 5;
+                obstacle.elem.style.left = obstacle.pos + "px";
+                if (obstacle.pos === -100){
+                    this.removeObstacle(obstacle)
+                    this.addObstacle();
+                }
+                if (obstacle.pos === 0 && game.player.pos > 390){
+                    game.gameOver();
+                }
+            },
+            addObstacle: function (){
+                this.obstacleArray.push(new Obstacle(getObstacleHtmlElem(), 930))
+            },
+            removeObstacle: function (obstacle){
+                obstacle.elem.remove();
+                this.obstacleArray.shift();
+            }
+        },
 
         startGame : function (){
-            setInterval(function (){
+            intervalId = setInterval(function (){
                 let gameScore = document.getElementById("game-score");
                 gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
-                game.moveEnemy();
+                if(game.obstacles.obstacleArray.length>0){
+                    game.obstacles.moveObstacle(game.obstacles.obstacleArray[0]);
+                }
                 game.addGravity();
-            },10)
-        },
-        moveEnemy: function (){
-            game.enemy.posEnemy -= 5;
-            game.enemy.enemy.style.left = game.enemy.posEnemy + "px";
-            if (game.enemy.posEnemy === -50){
-                game.enemy.enemy.remove()
-                game.enemy = new Enemy();
-
-            }
-            if (game.enemy.posEnemy === 0 && game.gameChar.posY > 390){
-                alert("ups");
-            }
+            },10);
         },
         addGravity : function (){
-            if (game.gameChar.posY < 450){
-                game.gameChar.posY += 2;
-                game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+            if (game.player.pos < 450){
+                game.player.pos += 3;
+                game.player.gameChar.style.top = game.player.pos + "px";
+            }
+            if (game.player.pos === 450){
+                game.player.gameChar.classList.remove("player-jumping");
+                game.player.gameChar.classList.add("player-full");
             }
         },
         initKeyEvents : function (){
             window.addEventListener("keydown", jump)
             window.addEventListener("keydown", duck)
             window.addEventListener("keyup", unDuck)
+        },
+        gameOver: function (){
+            window.removeEventListener("keydown", jump)
+            window.removeEventListener("keydown", duck)
+            window.removeEventListener("keyup", unDuck)
+            clearInterval(intervalId);
+            document.getElementById("game-result").style.display = "flex";
+            document.getElementById("game-result-score").innerText =
+                "Your score: " + document.getElementById("game-score").innerText;
+
         }
     };
     game.init()
 
-    function Enemy(){
-        let gameField = document.getElementById("game-container");
-        let enemy = document.createElement("div");
-        let enemyClasses = ["enemy-low", "enemy-high", "enemy-double"]
-        enemy.classList.add("game-enemy")
-        enemy.classList.add(enemyClasses[Math.floor(Math.random() * 3)])
-        gameField.appendChild(enemy);
-        this.enemy = enemy;
-        this.posEnemy = 930;
+    function Obstacle(htmlElem, pos){
+        this.elem = htmlElem;
+        this.pos = pos;
     }
+
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
-            if (game.gameChar.posY === 450) {
-                game.gameChar.posY -= 100;
-                game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
+            if (game.player.pos === 450) {
+                game.player.gameChar.classList.remove("player-full");
+                game.player.gameChar.classList.add("player-jumping");
+                game.player.pos -= 150;
+                game.player.gameChar.style.top = game.player.pos + "px";
             }
         }
     }
     function duck(event){
-        if (event.key === "ArrowDown" && game.gameChar.posY === 450){
-            game.gameChar.gameChar.removeAttribute("style");
-            game.gameChar.gameChar.classList.remove("game-character-full");
-            game.gameChar.gameChar.classList.add("game-character-ducked");
+        if (event.key === "ArrowDown" && game.player.pos === 450){
+            game.player.gameChar.removeAttribute("style");
+            game.player.gameChar.classList.remove("player-full");
+            game.player.gameChar.classList.add("player-ducked");
         }
     }
     function unDuck(event){
         if (event.key === "ArrowDown"){
-            game.gameChar.gameChar.removeAttribute("style");
-            game.gameChar.gameChar.classList.remove("game-character-ducked");
-            game.gameChar.gameChar.classList.add("game-character-full");
+            game.player.gameChar.removeAttribute("style");
+            game.player.gameChar.classList.remove("player-ducked");
+            game.player.gameChar.classList.add("player-full");
         }
+    }
+    function getObstacleHtmlElem(){
+        let gameField = document.getElementById("game-container");
+        let obstacle = document.createElement("div");
+        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double"]
+        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
+        gameField.appendChild(obstacle);
+        return obstacle;
     }
 })
