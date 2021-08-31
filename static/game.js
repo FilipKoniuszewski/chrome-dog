@@ -43,7 +43,6 @@ window.addEventListener("load", function (){
         }
     };
     game.init()
-
     function Enemy(){
         let gameField = document.getElementById("game-container");
         let enemy = document.createElement("div");
@@ -57,7 +56,7 @@ window.addEventListener("load", function (){
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.gameChar.posY === 450) {
-                game.gameChar.posY -= 100;
+                game.gameChar.posY -= 400;
                 game.gameChar.gameChar.style.top = game.gameChar.posY + "px";
             }
         }

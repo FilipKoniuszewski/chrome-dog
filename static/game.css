@@ -4,6 +4,13 @@
     border: 1px solid black;
     margin: 10vh auto;
     display: flex;
+    background:url(/static/images/background3.jpg) repeat-x 0 / 100% auto;
+    background-size: 1000px 500px;
+    animation: animation 20s linear infinite ;
+}
+@keyframes animation{
+	0%{background-position: 100vw 0;}
+	100%{background-position: 0 0;}
 }
 .game-character {
     width: 50px;
