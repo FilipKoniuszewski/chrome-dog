@@ -51,7 +51,7 @@ window.addEventListener("load", function (){
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 100){
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 200){
                     game.obstacles.addObstacle();
                 }
                 game.addGravity();
@@ -81,13 +81,16 @@ window.addEventListener("load", function (){
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
             clearInterval(characterIntervalAnimation);
-            document.getElementById("game-result").style.display = "flex";
-            document.getElementById("game-result-score").innerText =
-                "Your score: " + document.getElementById("game-score").innerText;
+            result();
         }
     };
     game.init()
 
+    function result() {
+        document.getElementById("game-result").style.display = "flex";
+        document.getElementById("game-result-score").innerText =
+            "Your score: " + document.getElementById("game-score").innerText
+    }
     function animatedCharacter() {
         characterIntervalAnimation = setInterval(function () {
                 if (game.player.gameChar.classList.contains('player-animation1')) {
@@ -98,7 +101,7 @@ window.addEventListener("load", function (){
                     game.player.gameChar.className += ' player-animation1';
                     game.player.gameChar.classList.remove("player-animation")
                 }
-            },timeOut*5);
+            },timeOut*10);
 
     }
     function Obstacle(htmlElem, pos){
