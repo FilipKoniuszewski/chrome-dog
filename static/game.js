@@ -1,7 +1,7 @@
 window.addEventListener("load", function (){
-    let GameIntervalId;
-    let CharacterIntervalAnimation;
-    let TimeOut = 10;
+    let gameIntervalId;
+    let characterIntervalAnimation;
+    let timeOut = 10;
     const game = {
         init: function (){
             this.obstacles.addObstacle();
@@ -27,7 +27,7 @@ window.addEventListener("load", function (){
                     let gameScore = document.getElementById("game-score");
                     gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
                 }
-                if (obstacle.pos === 0 && game.player.pos > 400){
+                if (isCollision(obstacle)){
                     game.gameOver();
                 }
             },
@@ -47,9 +47,7 @@ window.addEventListener("load", function (){
             }
         },
         startGame : function (){
-            GameIntervalId = setInterval(function (){
-                let gameScore = document.getElementById("game-score");
-                gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
+            gameIntervalId = setInterval(function (){
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
@@ -57,10 +55,9 @@ window.addEventListener("load", function (){
                     game.obstacles.addObstacle();
                 }
                 game.addGravity();
-            },TimeOut);
-            AnimatedCharacter();
+            },timeOut);
+            animatedCharacter();
         },
-
         addGravity : function (){
             if (game.player.pos < 450){
                 game.player.pos += 5;
@@ -80,10 +77,10 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
-            clearInterval(GameIntervalId);
+            clearInterval(gameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
-            clearInterval(CharacterIntervalAnimation);
+            clearInterval(characterIntervalAnimation);
             document.getElementById("game-result").style.display = "flex";
             document.getElementById("game-result-score").innerText =
                 "Your score: " + document.getElementById("game-score").innerText;
@@ -91,8 +88,8 @@ window.addEventListener("load", function (){
     };
     game.init()
 
-    function AnimatedCharacter() {
-        CharacterIntervalAnimation = setInterval(function () {
+    function animatedCharacter() {
+        characterIntervalAnimation = setInterval(function () {
                 if (game.player.gameChar.classList.contains('player-animation1')) {
                     game.player.gameChar.className += ' player-animation'
                     game.player.gameChar.classList.remove("player-animation1")
@@ -101,7 +98,7 @@ window.addEventListener("load", function (){
                     game.player.gameChar.className += ' player-animation1';
                     game.player.gameChar.classList.remove("player-animation")
                 }
-            },TimeOut*5);
+            },timeOut*5);
 
     }
     function Obstacle(htmlElem, pos){
@@ -147,9 +144,20 @@ window.addEventListener("load", function (){
     function getObstacleHtmlElem(){
         let gameField = document.getElementById("game-container");
         let obstacle = document.createElement("div");
-        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double"]
-        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
         gameField.appendChild(obstacle);
+        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
+        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
         return obstacle;
+    }
+    function isCollision(obstacle){
+        let playerTop = parseInt(getComputedStyle(game.player.gameChar).top)
+        if (obstacle.elem.classList.contains("obstacle-flying")
+            && obstacle.pos <= 0 && playerTop !== 460
+            && (game.player.pos === 450 || game.player.pos >430)) {
+                return true;
+        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=0 && game.player.pos > 400){
+            return true;
+        }
+        return false;
     }
 })
