@@ -1,6 +1,7 @@
 window.addEventListener("load", function (){
-    let gameIntervalId;
-    let characterIntervalAnimation;
+    // let gameIntervalId;
+    // let characterIntervalAnimation;
+    // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
     const game = {
         init: function (){
             this.obstacles.addObstacle();
@@ -20,7 +21,9 @@ window.addEventListener("load", function (){
                 this.elem.innerHTML = this.score.toString();
             }
         },
-        timeOut : 15,
+        timeOut : 20,
+        gameIntervalId : 0,
+        characterIntervalAnimation : 0,
         counter : {
             counterVal : 0,
             counterInterval : 0,
@@ -28,9 +31,10 @@ window.addEventListener("load", function (){
                 this.counterInterval = setInterval(function (){
                     game.counter.counterVal++;
                     if (game.counter.counterVal >0 && game.counter.counterVal%5 === 0){
-                        clearInterval(gameIntervalId);
-                        clearInterval(characterIntervalAnimation);
+                        clearInterval(game.gameIntervalId);
+                        clearInterval(game.characterIntervalAnimation);
                         game.timeOut -= 1;
+                        document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
                         game.startGame();
                     }
                 },1000)
@@ -41,7 +45,6 @@ window.addEventListener("load", function (){
             moveObstacle: function (obstacle){
                 obstacle.pos -= 5;
                 obstacle.elem.style.left = obstacle.pos + "px";
-                // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
                 let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
                 if (obstacle.pos === (-100 - obstacleWidth)){
                     this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
@@ -69,7 +72,7 @@ window.addEventListener("load", function (){
             }
         },
         startGame : function (){
-            gameIntervalId = setInterval(function (){
+            game.gameIntervalId = setInterval(function (){
                 console.log(game.timeOut);
                 game.addGravity();
                 game.gameScore.keepScore();
@@ -101,19 +104,21 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
-            clearInterval(gameIntervalId);
+            clearInterval(game.gameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
-            clearInterval(characterIntervalAnimation);
-            document.getElementById("game-result").style.display = "flex";
-            document.getElementById("game-result-score").innerText =
-                "Your score: " + document.getElementById("game-score").innerText;
-            clearInterval(game.counter.counterInterval);
+            clearInterval(game.characterIntervalAnimation);
+            result();
         }
     };
 
+    function result() {
+        document.getElementById("game-result").style.display = "flex";
+        document.getElementById("game-result-score").innerText =
+            "Your score: " + document.getElementById("game-score").innerText
+    }
     function animatedCharacter() {
-        characterIntervalAnimation = setInterval(function () {
+        game.characterIntervalAnimation = setInterval(function () {
                 if (game.player.gameChar.classList.contains('player-animation1')) {
                     game.player.gameChar.className += ' player-animation'
                     game.player.gameChar.classList.remove("player-animation1")
@@ -123,7 +128,6 @@ window.addEventListener("load", function (){
                     game.player.gameChar.classList.remove("player-animation")
                 }
             },game.timeOut*10);
-
     }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
@@ -169,9 +173,9 @@ window.addEventListener("load", function (){
         let gameField = document.getElementById("game-container");
         let obstacle = document.createElement("div");
         gameField.appendChild(obstacle);
-        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double"]
-        // obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
-        obstacle.classList.add("obstacle-low");
+        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
+        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
+        // obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
     function isCollision(obstacle){
