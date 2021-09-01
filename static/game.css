@@ -26,12 +26,6 @@
 @keyframes animation{
 	0%{background-position: 1000px 0;}
     100%{background-position: 0px 0;}
-    /*0% {*/
-    /*    transform: translateX(0);*/
-    /*}*/
-    /*100% {*/
-    /*transform: translateX(-50%);*/
-    /*}*/
 }
 .player {
     width: 100px;
@@ -40,9 +34,15 @@
 }
 .player-full {
     height: 50px;
-    background-image: url("images/piesek.png");
-    background-size: 100px 50px;
     top: 450px;
+}
+.player-animation {
+    background-image: url("images/chodzacy_piesek_2.png");
+    background-size: 100px 50px;
+}
+.player-animation1 {
+    background-image: url("images/chodzacy_piesek_1.png");
+    background-size: 100px 50px;
 }
 .player-jumping{
     height: 50px;
