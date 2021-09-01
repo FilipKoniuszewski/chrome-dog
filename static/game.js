@@ -1,10 +1,12 @@
 window.addEventListener("load", function (){
-    let intervalId;
+    let GameIntervalId;
+    let CharacterIntervalAnimation;
+    let TimeOut = 10;
     const game = {
         init: function (){
             this.obstacles.addObstacle();
-            this.startGame(this.obstacles.obstacleArray[0].elem, this.obstacles.obstacleArray[0].pos, this.player.gameChar, this.player.pos)
-            this.initKeyEvents(this.player.gameChar, this.player.pos)
+            this.startGame();
+            this.initKeyEvents();
         },
         player : {
             gameChar: document.querySelector(".player"),
@@ -17,8 +19,13 @@ window.addEventListener("load", function (){
                 obstacle.pos -= 5;
                 obstacle.elem.style.left = obstacle.pos + "px";
                 // document.getElementById("game-container").style.animation = "animation 2.66s linear infinite"
-                if (obstacle.pos === -100){
+                let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
+                if (obstacle.pos === (-100 - obstacleWidth)){
+                    this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
+                    this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
                     this.removeObstacle(obstacle)
+                    let gameScore = document.getElementById("game-score");
+                    gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
                 }
                 if (obstacle.pos === 0 && game.player.pos > 400){
                     game.gameOver();
@@ -39,12 +46,10 @@ window.addEventListener("load", function (){
                 this.obstacleArray.shift();
             }
         },
-
         startGame : function (){
-            intervalId = setInterval(function (){
+            GameIntervalId = setInterval(function (){
                 let gameScore = document.getElementById("game-score");
                 gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
-
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
@@ -52,8 +57,10 @@ window.addEventListener("load", function (){
                     game.obstacles.addObstacle();
                 }
                 game.addGravity();
-            },10);
+            },TimeOut);
+            AnimatedCharacter();
         },
+
         addGravity : function (){
             if (game.player.pos < 450){
                 game.player.pos += 5;
@@ -73,7 +80,7 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
-            clearInterval(intervalId);
+            clearInterval(GameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
             document.getElementById("game-result").style.display = "flex";
@@ -83,6 +90,19 @@ window.addEventListener("load", function (){
     };
     game.init()
 
+    function AnimatedCharacter() {
+        CharacterIntervalAnimation = setInterval(function () {
+                if (game.player.gameChar.classList.contains('player-animation1')) {
+                    game.player.gameChar.className += ' player-animation'
+                    game.player.gameChar.classList.remove("player-animation1")
+                }
+                else {
+                    game.player.gameChar.className += ' player-animation1';
+                    game.player.gameChar.classList.remove("player-animation")
+                }
+            },TimeOut*5);
+
+    }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
         this.pos = pos;
@@ -93,6 +113,8 @@ window.addEventListener("load", function (){
             if (game.player.pos === 450) {
                 game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
+                game.player.gameChar.classList.remove("player-animation")
+                game.player.gameChar.classList.remove("player-animation1")
                 game.player.gameChar.classList.add("player-jumping");
                 let jumpId = setInterval(function (){
                     game.player.pos -= 10;
@@ -109,6 +131,8 @@ window.addEventListener("load", function (){
         if (event.key === "ArrowDown" && game.player.pos === 450){
             game.player.gameChar.removeAttribute("style");
             game.player.gameChar.classList.remove("player-full");
+            game.player.gameChar.classList.remove("player-animation")
+            game.player.gameChar.classList.remove("player-animation1")
             game.player.gameChar.classList.add("player-ducked");
         }
     }
