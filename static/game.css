@@ -50,12 +50,14 @@
     width: 100px;
     position: relative;
     top: 450px;
+    z-index: 1;
 }
 .player-full {
     height: 50px;
     background-image: url("images/piesek.png");
     background-size: 100px 50px;
     top: 450px;
+    /*background-color: blueviolet;*/
 }
 .player-jumping{
     height: 50px;
@@ -68,6 +70,8 @@
     height: 40px;
     background-size: 100px 40px;
     top: 460px;
+
+    /*background-color: blue;*/
 }
 .obstacle-low{
     position: relative;
@@ -89,4 +93,12 @@
     height: 50px;
     width: 100px;
     top: 450px;
+}
+.obstacle-flying{
+    position: relative;
+    background-color: cornflowerblue;
+    height: 25px;
+    width: 50px;
+    top: 430px;
+
 }
