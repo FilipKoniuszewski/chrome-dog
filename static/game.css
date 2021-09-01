@@ -23,6 +23,8 @@
     border: 1px solid black;
 }
 #game-result{
+    box-shadow: 10px 10px 5px lightsteelblue;
+    font-family: Copperplate, Papyrus, fantasy;
     display: none;
     z-index: 20;
     flex-direction: column;
@@ -89,21 +91,6 @@
     height: 50px;
     width: 100px;
     top: 450px;
-}
-#game-result{
-    box-shadow: 10px 10px 5px lightsteelblue;
-    font-family: Copperplate, Papyrus, fantasy;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50vw;
-    height: 40vh;
-    background-color: rgba(0,25,255,0.4);
-    position: absolute;
-    top: 20vh;
-    left: 50%;
-    transform: translate(-50%,0);
 }
 a:link {
     text-decoration: none;
