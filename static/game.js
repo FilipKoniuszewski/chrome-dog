@@ -1,7 +1,4 @@
 window.addEventListener("load", function (){
-    // let gameIntervalId;
-    // let characterIntervalAnimation;
-    // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
     const game = {
         init: function (){
             this.obstacles.addObstacle();
@@ -33,7 +30,6 @@ window.addEventListener("load", function (){
                     if (game.counter.counterVal >0 && game.counter.counterVal%5 === 0){
                         clearInterval(game.gameIntervalId);
                         game.timeOut -= 2;
-                        document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
                         game.startGame();
                     }
                 },1000)
@@ -177,13 +173,13 @@ window.addEventListener("load", function (){
         obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
-    function isCollision(obstacle){
+    function isCollision(obstacle) {
         let playerTop = parseInt(getComputedStyle(game.player.gameChar).top)
         if (obstacle.elem.classList.contains("obstacle-flying")
-            && obstacle.pos <= 0 && playerTop !== 460
-            && (game.player.pos === 450 || game.player.pos >430)) {
-                return true;
-        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=0 && game.player.pos > 400){
+            && obstacle.pos < -10 && obstacle.pos > -120 && playerTop !== 460
+            && (game.player.pos === 450 || game.player.pos > 430)) {
+            return true;
+        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 0 && game.player.pos > 400) {
             return true;
         }
         return false;
