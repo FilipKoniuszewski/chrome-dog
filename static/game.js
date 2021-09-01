@@ -3,8 +3,8 @@ window.addEventListener("load", function (){
     const game = {
         init: function (){
             this.obstacles.addObstacle();
-            this.startGame(this.obstacles.obstacleArray[0].elem, this.obstacles.obstacleArray[0].pos, this.player.gameChar, this.player.pos)
-            this.initKeyEvents(this.player.gameChar, this.player.pos)
+            this.startGame();
+            this.initKeyEvents();
         },
         player : {
             gameChar: document.querySelector(".player"),
@@ -17,8 +17,13 @@ window.addEventListener("load", function (){
                 obstacle.pos -= 5;
                 obstacle.elem.style.left = obstacle.pos + "px";
                 // document.getElementById("game-container").style.animation = "animation 2.66s linear infinite"
-                if (obstacle.pos === -100){
+                let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
+                if (obstacle.pos === (-100 - obstacleWidth)){
+                    this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
+                    this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
                     this.removeObstacle(obstacle)
+                    let gameScore = document.getElementById("game-score");
+                    gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
                 }
                 if (obstacle.pos === 0 && game.player.pos > 400){
                     game.gameOver();
@@ -39,12 +44,8 @@ window.addEventListener("load", function (){
                 this.obstacleArray.shift();
             }
         },
-
         startGame : function (){
             intervalId = setInterval(function (){
-                let gameScore = document.getElementById("game-score");
-                gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
-
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })

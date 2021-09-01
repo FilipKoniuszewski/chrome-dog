@@ -1,28 +1,41 @@
-#game-background{
+.game-field{
     width: 1000px;
     height: 500px;
     position: absolute;
     left: 50%;
     top: 10vh;
     transform: translate(-50%,0);
+}
+#game-background{
     background:url(/static/images/backgroundv2.jpg) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
     animation: animation 50s linear infinite ;
-    border: 1px solid black;
+}
+#game-border{
+    z-index: 10;
+    box-shadow: -100px 10px 0px 0px rgba(255, 255, 255, 1);
 }
 #game-container {
-    width: 1000px;
-    height: 500px;
     display: flex;
-    position: absolute;
-    left: 50%;
-    top: 10vh;
-    transform: translate(-50%,0);
     background:url(/static/images/droga3.png) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
     animation: animation 4s linear infinite ;
+    border: 1px solid black;
 }
-
+#game-result{
+    display: none;
+    z-index: 20;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 40vh;
+    background-color: rgba(0,25,255,0.4);
+    position: absolute;
+    top: 20vh;
+    left: 50%;
+    transform: translate(-50%,0);
+}
 @keyframes animation{
 	0%{background-position: 1000px 0;}
     100%{background-position: 0px 0;}
@@ -76,17 +89,4 @@
     height: 50px;
     width: 100px;
     top: 450px;
-}
-#game-result{
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50vw;
-    height: 40vh;
-    background-color: rgba(0,25,255,0.4);
-    position: absolute;
-    top: 20vh;
-    left: 50%;
-    transform: translate(-50%,0);
 }
