@@ -78,6 +78,8 @@
     top: 450px;
 }
 #game-result{
+    box-shadow: 10px 10px 5px lightsteelblue;
+    font-family: Copperplate, Papyrus, fantasy;
     display: none;
     flex-direction: column;
     justify-content: center;
@@ -89,4 +91,23 @@
     top: 20vh;
     left: 50%;
     transform: translate(-50%,0);
+}
+a:link {
+    text-decoration: none;
+    padding: 14px 25px;
+    border-color: blue;
+    color: darkslateblue;
+    box-shadow: 0 0 40px 40px rgba(0, 25, 255, 0.4) inset, 0 0 0 0 blanchedalmond;
+    transition: all 150ms ease-in-out;
+}
+a:hover {
+    color: blueviolet;
+    box-shadow: 0 0 10px 0 lightskyblue inset, 0 0 10px 4px lightskyblue;}
+
+a:visited {
+    color: darkslateblue;
+}
+#result_text {
+    color: darkblue;
+    font-size: 200%;
 }
