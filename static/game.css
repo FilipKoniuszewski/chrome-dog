@@ -45,7 +45,8 @@
 .player {
     width: 100px;
     position: relative;
-    top: 450px;
+    top: 430px;
+    left: 20px;
     z-index: 1;
 }
 .player-full {
