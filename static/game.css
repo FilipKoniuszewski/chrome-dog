@@ -23,6 +23,8 @@
     border: 1px solid black;
 }
 #game-result{
+    box-shadow: 10px 10px 5px lightsteelblue;
+    font-family: Copperplate, Papyrus, fantasy;
     display: none;
     z-index: 20;
     flex-direction: column;
@@ -39,12 +41,6 @@
 @keyframes animation{
 	0%{background-position: 1000px 0;}
     100%{background-position: 0px 0;}
-    /*0% {*/
-    /*    transform: translateX(0);*/
-    /*}*/
-    /*100% {*/
-    /*transform: translateX(-50%);*/
-    /*}*/
 }
 .player {
     width: 100px;
@@ -54,10 +50,15 @@
 }
 .player-full {
     height: 50px;
-    background-image: url("images/piesek.png");
-    background-size: 100px 50px;
     top: 450px;
-    /*background-color: blueviolet;*/
+}
+.player-animation {
+    background-image: url("images/chodzacy_piesek_2.png");
+    background-size: 100px 50px;
+}
+.player-animation1 {
+    background-image: url("images/chodzacy_piesek_1.png");
+    background-size: 100px 50px;
 }
 .player-jumping{
     height: 50px;
@@ -70,8 +71,6 @@
     height: 40px;
     background-size: 100px 40px;
     top: 460px;
-
-    /*background-color: blue;*/
 }
 .obstacle-low{
     position: relative;
@@ -101,4 +100,23 @@
     width: 50px;
     top: 430px;
 
+}
+a:link {
+    text-decoration: none;
+    padding: 14px 25px;
+    border-color: blue;
+    color: darkslateblue;
+    box-shadow: 0 0 40px 40px rgba(0, 25, 255, 0.4) inset, 0 0 0 0 blanchedalmond;
+    transition: all 150ms ease-in-out;
+}
+a:hover {
+    color: blueviolet;
+    box-shadow: 0 0 10px 0 lightskyblue inset, 0 0 10px 4px lightskyblue;}
+
+a:visited {
+    color: darkslateblue;
+}
+#result_text {
+    color: darkblue;
+    font-size: 200%;
 }
