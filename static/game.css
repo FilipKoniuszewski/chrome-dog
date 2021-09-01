@@ -19,7 +19,7 @@
     display: flex;
     background:url(/static/images/droga3.png) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
-    animation: animation 4s linear infinite ;
+    animation: animation 6s linear infinite ;
     border: 1px solid black;
 }
 #game-result{
@@ -40,7 +40,7 @@
 }
 @keyframes animation{
 	0%{background-position: 1000px 0;}
-    100%{background-position: 0px 0;}
+    100%{background-position: 0 0;}
 }
 .player {
     width: 100px;

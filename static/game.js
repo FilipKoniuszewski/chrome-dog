@@ -1,31 +1,55 @@
 window.addEventListener("load", function (){
-    let gameIntervalId;
-    let characterIntervalAnimation;
-    let timeOut = 10;
+    // let gameIntervalId;
+    // let characterIntervalAnimation;
+    // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
     const game = {
         init: function (){
             this.obstacles.addObstacle();
             this.startGame();
             this.initKeyEvents();
+            this.counter.counterInit();
         },
         player : {
             gameChar: document.querySelector(".player"),
             pos: 450,
             jumping: false
         },
+        gameScore : {
+            elem : document.getElementById("game-score"),
+            score : 0,
+            keepScore : function (){
+                this.elem.innerHTML = this.score.toString();
+            }
+        },
+        timeOut : 20,
+        gameIntervalId : 0,
+        characterIntervalAnimation : 0,
+        counter : {
+            counterVal : 0,
+            counterInterval : 0,
+            counterInit : function(){
+                this.counterInterval = setInterval(function (){
+                    game.counter.counterVal++;
+                    if (game.counter.counterVal >0 && game.counter.counterVal%5 === 0){
+                        clearInterval(game.gameIntervalId);
+                        game.timeOut -= 2;
+                        document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
+                        game.startGame();
+                    }
+                },1000)
+            }
+        },
         obstacles : {
             obstacleArray: [],
             moveObstacle: function (obstacle){
                 obstacle.pos -= 5;
                 obstacle.elem.style.left = obstacle.pos + "px";
-                // document.getElementById("game-container").style.animation = "animation 2.66s linear infinite"
                 let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
                 if (obstacle.pos === (-100 - obstacleWidth)){
                     this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
                     this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
                     this.removeObstacle(obstacle)
-                    let gameScore = document.getElementById("game-score");
-                    gameScore.innerHTML = (+gameScore.innerHTML + 1).toString();
+                    game.gameScore.score += 1;
                 }
                 if (isCollision(obstacle)){
                     game.gameOver();
@@ -47,15 +71,17 @@ window.addEventListener("load", function (){
             }
         },
         startGame : function (){
-            gameIntervalId = setInterval(function (){
+            game.gameIntervalId = setInterval(function (){
+                console.log(game.timeOut);
+                game.addGravity();
+                game.gameScore.keepScore();
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 200){
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 300){
                     game.obstacles.addObstacle();
                 }
-                game.addGravity();
-            },timeOut);
+            },game.timeOut);
             animatedCharacter();
         },
         addGravity : function (){
@@ -77,14 +103,13 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
-            clearInterval(gameIntervalId);
+            clearInterval(game.gameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
-            clearInterval(characterIntervalAnimation);
+            clearInterval(game.characterIntervalAnimation);
             result();
         }
     };
-    game.init()
 
     function result() {
         document.getElementById("game-result").style.display = "flex";
@@ -92,7 +117,7 @@ window.addEventListener("load", function (){
             "Your score: " + document.getElementById("game-score").innerText
     }
     function animatedCharacter() {
-        characterIntervalAnimation = setInterval(function () {
+        game.characterIntervalAnimation = setInterval(function () {
                 if (game.player.gameChar.classList.contains('player-animation1')) {
                     game.player.gameChar.className += ' player-animation'
                     game.player.gameChar.classList.remove("player-animation1")
@@ -101,8 +126,7 @@ window.addEventListener("load", function (){
                     game.player.gameChar.className += ' player-animation1';
                     game.player.gameChar.classList.remove("player-animation")
                 }
-            },timeOut*10);
-
+            },game.timeOut*10);
     }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
@@ -148,8 +172,9 @@ window.addEventListener("load", function (){
         let gameField = document.getElementById("game-container");
         let obstacle = document.createElement("div");
         gameField.appendChild(obstacle);
-        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
-        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
+        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-flying"]
+        // obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
+        obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
     function isCollision(obstacle){
@@ -163,4 +188,6 @@ window.addEventListener("load", function (){
         }
         return false;
     }
+
+    game.init()
 })
