@@ -83,6 +83,7 @@ window.addEventListener("load", function (){
             clearInterval(GameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
+            clearInterval(CharacterIntervalAnimation);
             document.getElementById("game-result").style.display = "flex";
             document.getElementById("game-result-score").innerText =
                 "Your score: " + document.getElementById("game-score").innerText;

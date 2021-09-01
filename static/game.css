@@ -71,21 +71,24 @@
 }
 .obstacle-low{
     position: relative;
-    background-color: black;
+    background-image: url("images/kamien.png");
+    background-size: 25px 25px;
     height: 25px;
     width: 25px;
     top: 475px;
 }
 .obstacle-high{
     position: relative;
-    background-color: pink;
+    background-image: url("images/firehydrant2.png");
+    background-size: 50px 75px;
     height: 75px;
     width: 50px;
     top: 425px;
 }
 .obstacle-double{
     position: relative;
-    background-color: red;
+    background-image: url("images/smietnik.png");
+    background-size: 100px 50px;
     height: 50px;
     width: 100px;
     top: 450px;
