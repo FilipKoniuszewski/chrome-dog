@@ -13,7 +13,7 @@
 }
 #game-border{
     z-index: 10;
-    box-shadow: -100px 10px 0px 0px rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 100px rgb(255, 255, 255);
 }
 #game-container {
     display: flex;
@@ -51,7 +51,6 @@
 .player {
     width: 100px;
     position: relative;
-    top: 430px;
     left: 20px;
     z-index: 1;
 }
@@ -109,9 +108,7 @@
     background-size: 120px 50px;
     height: 50px;
     width: 120px;
-    top: 390px;
-
-}
+    top: 390px;}
 a:link {
     text-decoration: none;
     padding: 14px 25px;
