@@ -5,6 +5,17 @@ window.addEventListener("load", function (){
             this.startGame();
             this.initKeyEvents();
             this.counter.counterInit();
+            this.music.startMusic();
+        },
+        music : {
+            elem : document.getElementById("music"),
+            startMusic : function (){
+                this.elem.play();
+                this.elem.volume = 0.08;
+            },
+            stopMusic : function (){
+                this.elem.pause();
+            }
         },
         player : {
             gameChar: document.querySelector(".player"),
@@ -108,6 +119,7 @@ window.addEventListener("load", function (){
             window.addEventListener("keyup", unDuck)
         },
         gameOver: function (){
+            game.music.stopMusic();
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
