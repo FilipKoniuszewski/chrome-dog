@@ -97,6 +97,7 @@ window.addEventListener("load", function (){
                     }
                 }
                 if (isCollision(obstacle)){
+                    game.isGameOver = true;
                     game.gameOver();
                 }
             },
@@ -157,9 +158,12 @@ window.addEventListener("load", function (){
             window.addEventListener("keydown", duck)
             window.addEventListener("keyup", unDuck)
         },
+        isGameOver : false,
         gameOver: function (){
             loseSound()
             game.music.stopMusic();
+            game.player.gameChar.removeAttribute("class");
+            game.player.gameChar.classList.add("player", "player-full", "player-game-over");
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
@@ -201,6 +205,9 @@ window.addEventListener("load", function (){
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.player.pos === 450) {
+                if(!game.gameStarted){
+                    game.player.gameChar.classList.remove("player-standing");
+                }
                 jumpSound()
                 game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
@@ -208,24 +215,29 @@ window.addEventListener("load", function (){
                 game.player.gameChar.classList.remove("player-animation1")
                 game.player.gameChar.classList.add("player-jumping");
                 let jumpId = setInterval(function (){
-                    if (game.player.pos < 275) {
-                        game.player.jumping = false;
-                    }
-                    if (game.player.jumping){
-                        game.player.pos -= 10;
-                        game.player.gameChar.style.top = game.player.pos + "px";
-                    }
-                    else {
-                        game.player.pos += 10;
-                        game.player.gameChar.style.top = game.player.pos + "px";
-                        if (game.player.pos === 450){
-                            clearInterval(jumpId)
+                    if(game.isGameOver){
+                        clearInterval(jumpId);
+                        game.player.gameChar.removeAttribute("style");
+                    } else {
+                        if (game.player.pos < 275) {
                             game.player.jumping = false;
-                            game.player.gameChar.classList.remove("player-jumping");
-                            game.player.gameChar.classList.add("player-full", "player-animation");
-                            if (!game.gameStarted){
-                                game.gameStarted = true;
-                                game.initStartingAnimation();
+                        }
+                        if (game.player.jumping){
+                            game.player.pos -= 10;
+                            game.player.gameChar.style.top = game.player.pos + "px";
+                        }
+                        else {
+                            game.player.pos += 10;
+                            game.player.gameChar.style.top = game.player.pos + "px";
+                            if (game.player.pos === 450){
+                                clearInterval(jumpId)
+                                game.player.jumping = false;
+                                game.player.gameChar.classList.remove("player-jumping");
+                                game.player.gameChar.classList.add("player-full", "player-animation");
+                                if (!game.gameStarted){
+                                    game.gameStarted = true;
+                                    game.initStartingAnimation();
+                                }
                             }
                         }
                     }
@@ -253,8 +265,9 @@ window.addEventListener("load", function (){
         let gameField = document.getElementById("game-container");
         let obstacle = document.createElement("div");
         gameField.appendChild(obstacle);
-        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
-        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
+        let obstacleClasses = ["obstacle-low", "obstacle-low", "obstacle-high",
+            "obstacle-double", "obstacle-double", "obstacle-flying", "obstacle-flying"]
+        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * obstacleClasses.length)])
         return obstacle;
     }
     function isCollision(obstacle){
