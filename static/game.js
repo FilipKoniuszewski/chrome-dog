@@ -2,7 +2,7 @@ window.addEventListener("load", function (){
     const game = {
         gameStarted : false,
         initStart: function () {
-            this.initKeyEvents();
+            this.initJump();
         },
         initStartingAnimation : function (){
             animatedCharacter();
@@ -17,9 +17,9 @@ window.addEventListener("load", function (){
                 }
             },25);
 
-
         },
         initGame: function () {
+            this.initDuck();
             document.getElementById("game-container").removeAttribute("style");
             document.getElementById("game-background").removeAttribute("style");
             game.player.gameChar.removeAttribute("style");
@@ -133,8 +133,10 @@ window.addEventListener("load", function (){
                     game.randomPos.alreadyChosen = false;
             }
         },
-        initKeyEvents : function (){
+        initJump : function (){
             window.addEventListener("keydown", jump)
+        },
+        initDuck : function (){
             window.addEventListener("keydown", duck)
             window.addEventListener("keyup", unDuck)
         },
@@ -233,18 +235,17 @@ window.addEventListener("load", function (){
         gameField.appendChild(obstacle);
         let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
         obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
-        // obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
     function isCollision(obstacle){
         let playerTop = parseInt(getComputedStyle(game.player.gameChar).top);
         let obstacleHeight = parseInt(getComputedStyle(obstacle.elem).height);
         return (
-            (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 10 && obstacle.pos >= -80
+            (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 0 && obstacle.pos >= -80
                 && playerTop !== 460)
             ||
-            (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=10 && obstacle.pos >= -80
-            && game.player.pos > (430-obstacleHeight))
+            (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=0 && obstacle.pos >= -80
+            && game.player.pos > (420-obstacleHeight))
         )
     }
     game.initStart();
