@@ -87,7 +87,7 @@
     background-size: 100px 50px;
 }
 .player-game-over {
-    background-color: blue;
+    background-image: url("images/splakany_piesek.png");
     background-size: 100px 50px;
 }
 .player-jumping{
