@@ -13,14 +13,20 @@
 }
 #game-border{
     z-index: 10;
-    box-shadow: 0 0 0 100px rgb(255, 255, 255);
+    box-shadow: 0 0 0 120px rgb(255, 255, 255);
 }
 #game-container {
     display: flex;
-    background:url(/static/images/droga3.png) repeat-x 0 / 100% auto;
+
     background-size: 1000px 500px;
     animation: animation 6s linear infinite ;
     border: 1px solid black;
+}
+.game-container-background1{
+    background:url(/static/images/droga.png) repeat-x 0 / 100% auto;
+}
+.game-container-background2{
+    background:url(/static/images/droga_night.png) repeat-x 0 / 100% auto;
 }
 @keyframes animation{
 	0%{background-position: 1000px 0;}

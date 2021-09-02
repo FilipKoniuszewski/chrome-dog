@@ -2,6 +2,7 @@ window.addEventListener("load", function (){
     const game = {
         gameStarted : false,
         initStart: function () {
+            this.disableRightClick();
             this.initJump();
         },
         initStartingAnimation : function (){
@@ -83,8 +84,10 @@ window.addEventListener("load", function (){
                     }
                     this.removeObstacle(obstacle)
                     game.gameScore.score += 1;
-                    if (game.gameScore.score === 15) {
+                    if (game.gameScore.score === 10) {
                         document.getElementById("game-background").style.background = "url(/static/images/background_night.png) repeat-x 0 / 100% auto";
+                        document.getElementById("game-container").classList.remove("game-container-background1");
+                        document.getElementById("game-container").classList.add("game-container-background2");
                         document.getElementById("game-score").style.color = "white";
                     }
                     if (game.gameScore.score%5 === 0) {
@@ -122,7 +125,7 @@ window.addEventListener("load", function (){
         },
         randomPos : {
             alreadyChosen : false,
-            posArray : [100, 100, 100, 200, 200, 200, 300, 300, 400],
+            posArray : [100, 100, 100,100 , 100, 200, 200, 200, 200, 300, 300, 400],
             pos : 0,
             getRandomPos : function (){
                 if (!this.alreadyChosen){
@@ -139,6 +142,11 @@ window.addEventListener("load", function (){
                     game.obstacles.addObstacle();
                     game.randomPos.alreadyChosen = false;
             }
+        },
+        disableRightClick : function (){
+            window.addEventListener("contextmenu",function (event){
+                event.preventDefault();
+            })
         },
         initJump : function (){
             window.addEventListener("keydown", jump)
