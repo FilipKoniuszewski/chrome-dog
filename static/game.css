@@ -45,7 +45,6 @@
 .player {
     width: 100px;
     position: relative;
-    top: 430px;
     left: 20px;
     z-index: 1;
 }
@@ -99,12 +98,12 @@
 }
 .obstacle-flying{
     position: relative;
-    background-image: url("images/orze.png");
+    /*background-image: url("images/orze.png");*/
+    background-color: blueviolet;
     background-size: 50px 25px;
     height: 25px;
     width: 50px;
     top: 430px;
-
 }
 a:link {
     text-decoration: none;

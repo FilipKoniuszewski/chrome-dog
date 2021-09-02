@@ -1,10 +1,8 @@
 window.addEventListener("load", function (){
-    // let gameIntervalId;
-    // let characterIntervalAnimation;
-    // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite"
     const game = {
         init: function (){
             this.obstacles.addObstacle();
+            this.addObstacles();
             this.startGame();
             this.initKeyEvents();
             this.counter.counterInit();
@@ -21,9 +19,10 @@ window.addEventListener("load", function (){
                 this.elem.innerHTML = this.score.toString();
             }
         },
-        timeOut : 20,
+        timeOut : 10,
         gameIntervalId : 0,
         characterIntervalAnimation : 0,
+        obstacleIntervalId : 0,
         counter : {
             counterVal : 0,
             counterInterval : 0,
@@ -34,7 +33,7 @@ window.addEventListener("load", function (){
                         clearInterval(game.gameIntervalId);
                         clearInterval(game.characterIntervalAnimation);
                         game.timeOut -= 1;
-                        document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
+                        // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
                         game.startGame();
                     }
                 },1000)
@@ -43,10 +42,11 @@ window.addEventListener("load", function (){
         obstacles : {
             obstacleArray: [],
             moveObstacle: function (obstacle){
-                obstacle.pos -= 5;
+                // obstacle.pos -= 5;
+                obstacle.pos -= 2;
                 obstacle.elem.style.left = obstacle.pos + "px";
                 let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
-                if (obstacle.pos === (-100 - obstacleWidth)){
+                if (obstacle.pos <= (-100 - obstacleWidth) && this.obstacleArray.length > 1){
                     this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
                     this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
                     this.removeObstacle(obstacle)
@@ -73,27 +73,25 @@ window.addEventListener("load", function (){
         },
         startGame : function (){
             game.gameIntervalId = setInterval(function (){
-                console.log(game.timeOut);
-                game.addGravity();
                 game.gameScore.keepScore();
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 500){ //dodawanie kolejnych przeszkod
-                    game.obstacles.addObstacle();
-                }
-            },game.timeOut);
+                // if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 100){ //dodawanie kolejnych przeszkod
+                //     game.obstacles.addObstacle();
+                // }
+            },game.timeOut*0.7);
             animatedCharacter();
         },
-        addGravity : function (){
-            if (game.player.pos < 450){
-                game.player.pos += 5;
-                game.player.gameChar.style.top = game.player.pos + "px";
-            }
-            if (game.player.pos === 450 && !game.player.jumping){
-                game.player.gameChar.classList.remove("player-jumping");
-                game.player.gameChar.classList.add("player-full");
-            }
+        addObstacles : function (){
+            let counter = 0;
+            game.obstacleIntervalId = setInterval(function (){
+                counter++;
+                console.log(counter);
+                if (counter%50 === 0) {
+                    game.obstacles.addObstacle();
+                }
+            },100)
         },
         initKeyEvents : function (){
             window.addEventListener("keydown", jump)
@@ -108,6 +106,7 @@ window.addEventListener("load", function (){
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
             clearInterval(game.characterIntervalAnimation);
+            clearInterval(game.counter.counterInterval);
             result();
         }
     };
@@ -119,6 +118,7 @@ window.addEventListener("load", function (){
     }
     function animatedCharacter() {
         game.characterIntervalAnimation = setInterval(function () {
+            if (game.player.gameChar.classList.contains("player-full")){
                 if (game.player.gameChar.classList.contains('player-animation1')) {
                     game.player.gameChar.className += ' player-animation'
                     game.player.gameChar.classList.remove("player-animation1")
@@ -127,7 +127,8 @@ window.addEventListener("load", function (){
                     game.player.gameChar.className += ' player-animation1';
                     game.player.gameChar.classList.remove("player-animation")
                 }
-            },game.timeOut*10);
+            }
+        },game.timeOut*10);
     }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
@@ -143,13 +144,24 @@ window.addEventListener("load", function (){
                 game.player.gameChar.classList.remove("player-animation1")
                 game.player.gameChar.classList.add("player-jumping");
                 let jumpId = setInterval(function (){
-                    game.player.pos -= 10;
-                    game.player.gameChar.style.top = game.player.pos + "px";
                     if (game.player.pos < 275) {
-                        clearInterval(jumpId)
                         game.player.jumping = false;
                     }
-                },game.timeOut);
+                    if (game.player.jumping){
+                        game.player.pos -= 10;
+                        game.player.gameChar.style.top = game.player.pos + "px";
+                    }
+                    else {
+                        game.player.pos += 10;
+                        game.player.gameChar.style.top = game.player.pos + "px";
+                        if (game.player.pos === 450){
+                            clearInterval(jumpId)
+                            game.player.jumping = false;
+                            game.player.gameChar.classList.remove("player-jumping");
+                            game.player.gameChar.classList.add("player-full", "player-animation");
+                        }
+                    }
+                },game.timeOut*2);
             }
         }
     }
@@ -157,8 +169,8 @@ window.addEventListener("load", function (){
         if (event.key === "ArrowDown" && game.player.pos === 450){
             game.player.gameChar.removeAttribute("style");
             game.player.gameChar.classList.remove("player-full");
-            game.player.gameChar.classList.remove("player-animation")
-            game.player.gameChar.classList.remove("player-animation1")
+            game.player.gameChar.classList.remove("player-animation");
+            game.player.gameChar.classList.remove("player-animation1");
             game.player.gameChar.classList.add("player-ducked");
         }
     }
@@ -166,7 +178,7 @@ window.addEventListener("load", function (){
         if (event.key === "ArrowDown"){
             game.player.gameChar.removeAttribute("style");
             game.player.gameChar.classList.remove("player-ducked");
-            game.player.gameChar.classList.add("player-full");
+            game.player.gameChar.classList.add("player-full", "player-animation");
         }
     }
     function getObstacleHtmlElem(){
@@ -179,15 +191,15 @@ window.addEventListener("load", function (){
         return obstacle;
     }
     function isCollision(obstacle){
-        let playerTop = parseInt(getComputedStyle(game.player.gameChar).top)
-        if (obstacle.elem.classList.contains("obstacle-flying")
-            && obstacle.pos <= 20 && playerTop !== 460
-            && (game.player.pos === 450 || game.player.pos >430)) {
-                return true;
-        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=20 && game.player.pos > 400){
-            return true;
-        }
-        return false;
+        let playerTop = parseInt(getComputedStyle(game.player.gameChar).top);
+        let obstacleHeight = parseInt(getComputedStyle(obstacle.elem).height);
+        return (
+            (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 10 && obstacle.pos >= -80
+                && playerTop !== 460 && (game.player.pos === 450 || game.player.pos >430-obstacleHeight))
+            ||
+            (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=10 && obstacle.pos >= -80
+            && game.player.pos > (430-obstacleHeight))
+        )
     }
 
     game.init()
