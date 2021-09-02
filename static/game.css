@@ -7,20 +7,30 @@
     transform: translate(-50%,0);
 }
 #game-background{
-    background:url(/static/images/backgroundv2.jpg) repeat-x 0 / 100% auto;
+    background:url(/static/images/backgroundv2.jpeg) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
     animation: animation 50s linear infinite ;
 }
 #game-border{
     z-index: 10;
-    box-shadow: 0 0 0 100px rgb(255, 255, 255);
+    box-shadow: 0 0 0 120px rgb(255, 255, 255);
 }
 #game-container {
     display: flex;
-    background:url(/static/images/droga3.png) repeat-x 0 / 100% auto;
+
     background-size: 1000px 500px;
     animation: animation 6s linear infinite ;
     border: 1px solid black;
+}
+.game-container-background1{
+    background:url(/static/images/droga.png) repeat-x 0 / 100% auto;
+}
+.game-container-background2{
+    background:url(/static/images/droga_night.png) repeat-x 0 / 100% auto;
+}
+@keyframes animation{
+	0%{background-position: 1000px 0;}
+    100%{background-position: 0 0;}
 }
 #game-result{
     box-shadow: 10px 10px 5px lightsteelblue;
@@ -30,17 +40,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 50vw;
+    width: 36vw;
     height: 40vh;
+    border-radius: 10px;
     background-color: rgba(0,25,255,0.4);
     position: absolute;
     top: 20vh;
     left: 50%;
     transform: translate(-50%,0);
+    margin-top: 10px;
 }
-@keyframes animation{
-	0%{background-position: 1000px 0;}
-    100%{background-position: 0 0;}
+#game-result-score {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
 }
 .player {
     width: 100px;
@@ -98,13 +110,11 @@
 }
 .obstacle-flying{
     position: relative;
-    /*background-image: url("images/orze.png");*/
-    background-color: blueviolet;
-    background-size: 50px 25px;
-    height: 25px;
-    width: 50px;
-    top: 430px;
-}
+    background-image: url("images/orze.png");
+    background-size: 120px 50px;
+    height: 50px;
+    width: 120px;
+    top: 390px;}
 a:link {
     text-decoration: none;
     padding: 14px 25px;
@@ -123,4 +133,11 @@ a:visited {
 #result_text {
     color: darkblue;
     font-size: 200%;
+}
+#game-score {
+    text-align: center;
+    font-family: Copperplate, Papyrus, fantasy;
+    font-size: 110%;
+    margin-top: 20px;
+    color:black;
 }

@@ -1,10 +1,43 @@
 window.addEventListener("load", function (){
     const game = {
-        init: function (){
+        gameStarted : false,
+        initStart: function () {
+            this.disableRightClick();
+            this.initJump();
+        },
+        initStartingAnimation : function (){
+            animatedCharacter();
+            let pos = 0;
+            let startingAnimationInterval = setInterval(function (){
+                pos++;
+                game.player.gameChar.style.left = pos + "px";
+                if (pos === 20){
+                    clearInterval(startingAnimationInterval);
+                    clearInterval(game.characterIntervalAnimation);
+                    game.initGame();
+                }
+            },25);
+
+        },
+        initGame: function () {
+            this.initDuck();
+            document.getElementById("game-container").removeAttribute("style");
+            document.getElementById("game-background").removeAttribute("style");
+            game.player.gameChar.removeAttribute("style");
             this.obstacles.addObstacle();
             this.startGame();
-            this.initKeyEvents();
             this.counter.counterInit();
+            this.music.startMusic();
+        },
+        music : {
+            elem : document.getElementById("music"),
+            startMusic : function (){
+                this.elem.play();
+                this.elem.volume = 0.08;
+            },
+            stopMusic : function (){
+                this.elem.pause();
+            }
         },
         player : {
             gameChar: document.querySelector(".player"),
@@ -15,7 +48,7 @@ window.addEventListener("load", function (){
             elem : document.getElementById("game-score"),
             score : 0,
             keepScore : function (){
-                this.elem.innerHTML = this.score.toString();
+                this.elem.innerHTML = "Your score: " + this.score.toString();
             }
         },
         timeOut : 10,
@@ -51,6 +84,15 @@ window.addEventListener("load", function (){
                     }
                     this.removeObstacle(obstacle)
                     game.gameScore.score += 1;
+                    if (game.gameScore.score === 10) {
+                        document.getElementById("game-background").style.background = "url(/static/images/background_night.png) repeat-x 0 / 100% auto";
+                        document.getElementById("game-container").classList.remove("game-container-background1");
+                        document.getElementById("game-container").classList.add("game-container-background2");
+                        document.getElementById("game-score").style.color = "white";
+                    }
+                    if (game.gameScore.score%5 === 0) {
+                        hitPointsSound()
+                    }
                 }
                 if (isCollision(obstacle)){
                     game.gameOver();
@@ -83,7 +125,7 @@ window.addEventListener("load", function (){
         },
         randomPos : {
             alreadyChosen : false,
-            posArray : [100, 100, 100, 200, 200, 200, 300, 300, 400],
+            posArray : [100, 100, 100,100 , 100, 200, 200, 200, 200, 300, 300, 400],
             pos : 0,
             getRandomPos : function (){
                 if (!this.alreadyChosen){
@@ -99,31 +141,40 @@ window.addEventListener("load", function (){
                     game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].addedNextObstacle = true;
                     game.obstacles.addObstacle();
                     game.randomPos.alreadyChosen = false;
-                    console.log(game.randomPos.posArray);
             }
         },
-        initKeyEvents : function (){
+        disableRightClick : function (){
+            window.addEventListener("contextmenu",function (event){
+                event.preventDefault();
+            })
+        },
+        initJump : function (){
             window.addEventListener("keydown", jump)
+        },
+        initDuck : function (){
             window.addEventListener("keydown", duck)
             window.addEventListener("keyup", unDuck)
         },
         gameOver: function (){
+            loseSound()
+            game.music.stopMusic();
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
+            result();
+            document.getElementById("game-score").remove();
             clearInterval(game.gameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
             clearInterval(game.characterIntervalAnimation);
             clearInterval(game.counter.counterInterval);
-            result();
         }
     };
 
     function result() {
         document.getElementById("game-result").style.display = "flex";
         document.getElementById("game-result-score").innerText =
-            "Your score: " + document.getElementById("game-score").innerText
+            document.getElementById("game-score").innerText
     }
     function animatedCharacter() {
         game.characterIntervalAnimation = setInterval(function () {
@@ -137,7 +188,7 @@ window.addEventListener("load", function (){
                     game.player.gameChar.classList.remove("player-animation")
                 }
             }
-        },game.timeOut*10);
+        },game.timeOut*15);
     }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
@@ -148,6 +199,7 @@ window.addEventListener("load", function (){
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
             if (game.player.pos === 450) {
+                jumpSound()
                 game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
                 game.player.gameChar.classList.remove("player-animation")
@@ -169,6 +221,10 @@ window.addEventListener("load", function (){
                             game.player.jumping = false;
                             game.player.gameChar.classList.remove("player-jumping");
                             game.player.gameChar.classList.add("player-full", "player-animation");
+                            if (!game.gameStarted){
+                                game.gameStarted = true;
+                                game.initStartingAnimation();
+                            }
                         }
                     }
                 },game.timeOut*2.5);
@@ -197,19 +253,30 @@ window.addEventListener("load", function (){
         gameField.appendChild(obstacle);
         let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
         obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
-        // obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
     function isCollision(obstacle){
         let playerTop = parseInt(getComputedStyle(game.player.gameChar).top);
         let obstacleHeight = parseInt(getComputedStyle(obstacle.elem).height);
         return (
-            (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 10 && obstacle.pos >= -80
-                && playerTop !== 460 && (game.player.pos === 450 || game.player.pos >430-obstacleHeight))
+            (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 0 && obstacle.pos >= -80
+                && playerTop !== 460)
             ||
-            (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=10 && obstacle.pos >= -80
-            && game.player.pos > (430-obstacleHeight))
+            (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=0 && obstacle.pos >= -80
+            && game.player.pos > (420-obstacleHeight))
         )
     }
-    game.init()
+    function loseSound() {
+        let audio = new Audio("static/sounds/losing_sound.mp3");
+        audio.play();
+    }
+    function jumpSound() {
+        let audio = new Audio("static/sounds/jump_one.mp3");
+        audio.play();
+    }
+    function hitPointsSound() {
+        let audio = new Audio("static/sounds/point.mp3");
+        audio.play();
+    }
+    game.initStart();
 })
