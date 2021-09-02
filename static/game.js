@@ -2,7 +2,7 @@ window.addEventListener("load", function (){
     const game = {
         init: function (){
             this.obstacles.addObstacle();
-            this.addObstacles();
+            // this.addObstacles();
             this.startGame();
             this.initKeyEvents();
             this.counter.counterInit();
@@ -33,6 +33,7 @@ window.addEventListener("load", function (){
                         clearInterval(game.gameIntervalId);
                         clearInterval(game.characterIntervalAnimation);
                         game.timeOut -= 1;
+                        game.randomPos.posArray.push(400);
                         // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
                         game.startGame();
                     }
@@ -46,9 +47,11 @@ window.addEventListener("load", function (){
                 obstacle.pos -= 2;
                 obstacle.elem.style.left = obstacle.pos + "px";
                 let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
-                if (obstacle.pos <= (-100 - obstacleWidth) && this.obstacleArray.length > 1){
-                    this.obstacleArray[1].pos = this.obstacleArray[1].pos + obstacleWidth;
-                    this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
+                if (obstacle.pos <= (-100 - obstacleWidth)){
+                    for (let i=1; i< this.obstacleArray.length;i++){
+                        this.obstacleArray[i].pos = this.obstacleArray[i].pos + obstacleWidth;
+                        this.obstacleArray[i].elem.style.left = this.obstacleArray[i].pos + "px";
+                    }
                     this.removeObstacle(obstacle)
                     game.gameScore.score += 1;
                 }
@@ -77,21 +80,30 @@ window.addEventListener("load", function (){
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                // if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 100){ //dodawanie kolejnych przeszkod
-                //     game.obstacles.addObstacle();
-                // }
+                game.addObstacles();
             },game.timeOut*0.7);
             animatedCharacter();
         },
-        addObstacles : function (){
-            let counter = 0;
-            game.obstacleIntervalId = setInterval(function (){
-                counter++;
-                console.log(counter);
-                if (counter%50 === 0) {
-                    game.obstacles.addObstacle();
+        randomPos : {
+            alreadyChosen : false,
+            posArray : [100, 100, 100, 200, 200, 200, 300, 300, 400],
+            pos : 0,
+            getRandomPos : function (){
+                if (!this.alreadyChosen){
+                    this.pos = this.posArray[Math.floor(Math.random() * this.posArray.length)];
+                    this.alreadyChosen = true;
                 }
-            },100)
+            }
+        },
+        addObstacles : function (){
+            game.randomPos.getRandomPos();
+            if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos < game.randomPos.pos &&
+                !game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].addedNextObstacle){
+                    game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].addedNextObstacle = true;
+                    game.obstacles.addObstacle();
+                    game.randomPos.alreadyChosen = false;
+                    console.log(game.randomPos.posArray);
+            }
         },
         initKeyEvents : function (){
             window.addEventListener("keydown", jump)
@@ -133,6 +145,7 @@ window.addEventListener("load", function (){
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
         this.pos = pos;
+        this.addedNextObstacle = false;
     }
 
     function jump(event) {
@@ -161,7 +174,7 @@ window.addEventListener("load", function (){
                             game.player.gameChar.classList.add("player-full", "player-animation");
                         }
                     }
-                },game.timeOut*2);
+                },game.timeOut*2.5);
             }
         }
     }
@@ -201,6 +214,5 @@ window.addEventListener("load", function (){
             && game.player.pos > (430-obstacleHeight))
         )
     }
-
     game.init()
 })
