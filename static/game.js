@@ -92,7 +92,7 @@ window.addEventListener("load", function (){
                             document.getElementById("game-container").classList.remove("game-container-background1");
                             document.getElementById("game-container").classList.add("game-container-background2");
                             document.getElementById("game-score").style.color = "white";
-                            
+
                             game.nightMode = false;
                         }
                         else {
