@@ -1,5 +1,17 @@
 {% extends "main.html" %}
+{% block style %}
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+{% endblock %}
 {% block content %}
-    <h1>Welcome to Doggy Adventure</h1>
-    <a href="/game">New Game</a>
+    <div id="left"></div>
+    <div id="right"></div>
+    <div id="top"></div>
+    <div id="bottom"></div>
+    <div id="border" class="field"></div>
+    <div id="background" class="field"></div>
+    <div class="info">
+        <h1>Welcome to Doggy Adventure</h1>
+        <a href="/game" class="button">New Game</a>
+    </div>
+{#    <div class="dog"></div>#}
 {% endblock %}
