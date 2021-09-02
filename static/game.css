@@ -7,7 +7,6 @@
     transform: translate(-50%,0);
 }
 #game-background{
-    background:url(/static/images/backgroundv2.jpeg) repeat-x 0 / 100% auto;
     background-size: 1000px 500px;
     animation: animation 50s linear infinite ;
 }
@@ -17,7 +16,6 @@
 }
 #game-container {
     display: flex;
-
     background-size: 1000px 500px;
     animation: animation 6s linear infinite ;
     border: 1px solid black;
@@ -28,12 +26,17 @@
 .game-container-background2{
     background:url(/static/images/droga_night.png) repeat-x 0 / 100% auto;
 }
+.game-background-1 {
+    background:url(/static/images/backgroundv2.jpeg) repeat-x 0 / 100% auto;
+}
+.game-background-2 {
+    background:url(/static/images/backgroundnight.png) repeat-x 0 / 100% auto;
+}
 @keyframes animation{
 	0%{background-position: 1000px 0;}
     100%{background-position: 0 0;}
 }
 #game-result{
-    box-shadow: 10px 10px 5px lightsteelblue;
     font-family: Copperplate, Papyrus, fantasy;
     display: none;
     z-index: 20;
@@ -43,12 +46,19 @@
     width: 36vw;
     height: 40vh;
     border-radius: 10px;
-    background-color: rgba(0,25,255,0.4);
     position: absolute;
     top: 20vh;
     left: 50%;
     transform: translate(-50%,0);
     margin-top: 10px;
+}
+.game-result-day {
+    box-shadow: 10px 10px 5px lightsteelblue;
+    background-color: rgba(0,25,255,0.4);
+}
+.game-result-night {
+    box-shadow: 10px 10px 5px #0e0e0e;
+    background-color: rgba(175, 222, 255, 0.78);
 }
 #game-result-score {
     margin-top: 2vh;

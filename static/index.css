@@ -11,7 +11,7 @@ body {
 }
 #background {
     display: flex;
-    background-image: url("images/background4.jpg");
+    background-image: url("images/index_background.jpg");
     background-position: center;
     background-size: 1000px 500px;
 }

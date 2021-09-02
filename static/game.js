@@ -55,6 +55,7 @@ window.addEventListener("load", function (){
         gameIntervalId : 0,
         characterIntervalAnimation : 0,
         obstacleIntervalId : 0,
+        nightMode : true,
         counter : {
             counterVal : 0,
             counterInterval : 0,
@@ -86,11 +87,27 @@ window.addEventListener("load", function (){
                     }
                     this.removeObstacle(obstacle)
                     game.gameScore.score += 1;
-                    if (game.gameScore.score === 10) {
-                        document.getElementById("game-background").style.background = "url(/static/images/background_night.png) repeat-x 0 / 100% auto";
-                        document.getElementById("game-container").classList.remove("game-container-background1");
-                        document.getElementById("game-container").classList.add("game-container-background2");
-                        document.getElementById("game-score").style.color = "white";
+                    if (game.gameScore.score%5 === 0) {
+                        if (game.nightMode === true) {
+                            document.getElementById("game-background").classList.remove("game-background-1")
+                            document.getElementById("game-background").classList.add("game-background-2")
+                            document.getElementById("game-container").classList.remove("game-container-background1");
+                            document.getElementById("game-container").classList.add("game-container-background2");
+                            document.getElementById("game-score").style.color = "white";
+                            document.getElementById("game-result").classList.remove("game-result-day")
+                            document.getElementById("game-result").classList.add("game-result-night")
+                            game.nightMode = false;
+                        }
+                        else {
+                            document.getElementById("game-background").classList.remove("game-background-2")
+                            document.getElementById("game-background").classList.add("game-background-1")
+                            document.getElementById("game-container").classList.remove("game-container-background2");
+                            document.getElementById("game-container").classList.add("game-container-background1");
+                            document.getElementById("game-score").style.color = "black";
+                            document.getElementById("game-result").classList.remove("game-result-night")
+                            document.getElementById("game-result").classList.add("game-result-day")
+                            game.nightMode = true;
+                        }
                     }
                     if (game.gameScore.score%5 === 0) {
                         hitPointsSound()

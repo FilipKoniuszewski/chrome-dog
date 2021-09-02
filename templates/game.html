@@ -7,12 +7,12 @@
 {% endblock %}
 {% block content %}
     <div id="game-border" class="game-field" ></div>
-    <div id="game-background" class="game-field" style="animation-play-state: paused;"></div>
+    <div id="game-background" class="game-field game-background-1" style="animation-play-state: paused;"></div>
     <div id="game-score" class="game-field"></div>
     <div id="game-container" class="game-field game-container-background1" style="animation-play-state: paused;">
         <div class="player player-full player-standing" style="left: 0px"></div>
     </div>
-    <div id="game-result">
+    <div id="game-result" class="game-result-day">
         <div id="result_text">GAME OVER</div>
         <div id="game-result-score"></div>
         <a href="/game">Play Again</a>
