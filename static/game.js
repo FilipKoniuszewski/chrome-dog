@@ -1,9 +1,30 @@
 window.addEventListener("load", function (){
     const game = {
-        init: function (){
+        gameStarted : false,
+        initStart: function () {
+            this.initKeyEvents();
+        },
+        initStartingAnimation : function (){
+            animatedCharacter();
+            let pos = 0;
+            let startingAnimationInterval = setInterval(function (){
+                pos++;
+                game.player.gameChar.style.left = pos + "px";
+                if (pos === 20){
+                    clearInterval(startingAnimationInterval);
+                    clearInterval(game.characterIntervalAnimation);
+                    game.initGame();
+                }
+            },25);
+
+
+        },
+        initGame: function () {
+            document.getElementById("game-container").removeAttribute("style");
+            document.getElementById("game-background").removeAttribute("style");
+            game.player.gameChar.removeAttribute("style");
             this.obstacles.addObstacle();
             this.startGame();
-            this.initKeyEvents();
             this.counter.counterInit();
             this.music.startMusic();
         },
@@ -110,7 +131,6 @@ window.addEventListener("load", function (){
                     game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].addedNextObstacle = true;
                     game.obstacles.addObstacle();
                     game.randomPos.alreadyChosen = false;
-                    console.log(game.randomPos.posArray);
             }
         },
         initKeyEvents : function (){
@@ -149,7 +169,7 @@ window.addEventListener("load", function (){
                     game.player.gameChar.classList.remove("player-animation")
                 }
             }
-        },game.timeOut*10);
+        },game.timeOut*15);
     }
     function Obstacle(htmlElem, pos){
         this.elem = htmlElem;
@@ -181,6 +201,10 @@ window.addEventListener("load", function (){
                             game.player.jumping = false;
                             game.player.gameChar.classList.remove("player-jumping");
                             game.player.gameChar.classList.add("player-full", "player-animation");
+                            if (!game.gameStarted){
+                                game.gameStarted = true;
+                                game.initStartingAnimation();
+                            }
                         }
                     }
                 },game.timeOut*2.5);
@@ -217,11 +241,11 @@ window.addEventListener("load", function (){
         let obstacleHeight = parseInt(getComputedStyle(obstacle.elem).height);
         return (
             (obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 10 && obstacle.pos >= -80
-                && playerTop !== 460 && (game.player.pos === 450 || game.player.pos >430-obstacleHeight))
+                && playerTop !== 460)
             ||
             (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=10 && obstacle.pos >= -80
             && game.player.pos > (430-obstacleHeight))
         )
     }
-    game.init()
+    game.initStart();
 })
