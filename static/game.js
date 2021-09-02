@@ -60,10 +60,12 @@ window.addEventListener("load", function (){
             counterInterval : 0,
             counterInit : function(){
                 this.counterInterval = setInterval(function (){
+                    console.log(game.counter.counterVal);
                     game.counter.counterVal++;
-                    if (game.counter.counterVal >0 && game.counter.counterVal%5 === 0){
+                    if (game.counter.counterVal >0 && game.counter.counterVal%10 === 0){
                         clearInterval(game.gameIntervalId);
                         clearInterval(game.characterIntervalAnimation);
+                        game.counter.counterVal = 0;
                         game.timeOut -= 1;
                         game.randomPos.posArray.push(400);
                         game.startGame();
