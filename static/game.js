@@ -15,7 +15,7 @@ window.addEventListener("load", function (){
             elem : document.getElementById("game-score"),
             score : 0,
             keepScore : function (){
-                this.elem.innerHTML = this.score.toString();
+                this.elem.innerHTML = "Your score: " + this.score.toString();
             }
         },
         timeOut : 20,
@@ -29,7 +29,9 @@ window.addEventListener("load", function (){
                     game.counter.counterVal++;
                     if (game.counter.counterVal >0 && game.counter.counterVal%5 === 0){
                         clearInterval(game.gameIntervalId);
-                        game.timeOut -= 2;
+                        clearInterval(game.characterIntervalAnimation);
+                        game.timeOut -= 1;
+                        // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
                         game.startGame();
                     }
                 },1000)
@@ -46,6 +48,9 @@ window.addEventListener("load", function (){
                     this.obstacleArray[1].elem.style.left = this.obstacleArray[1].pos + "px";
                     this.removeObstacle(obstacle)
                     game.gameScore.score += 1;
+                    if (game.gameScore.score === 2) {
+                        document.getElementById("game-background").style.background = "url(/static/images/background_night.png) repeat-x 0 / 100% auto";
+                    }
                 }
                 if (isCollision(obstacle)){
                     game.gameOver();
@@ -67,6 +72,7 @@ window.addEventListener("load", function (){
             }
         },
         startGame : function (){
+            animatedCharacter();
             game.gameIntervalId = setInterval(function (){
                 console.log(game.timeOut);
                 game.addGravity();
@@ -74,11 +80,10 @@ window.addEventListener("load", function (){
                 game.obstacles.obstacleArray.forEach(function (obstacle){
                     game.obstacles.moveObstacle(obstacle);
                 })
-                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 300){
+                if (game.obstacles.obstacleArray[game.obstacles.obstacleArray.length-1].pos === 500){ //dodawanie kolejnych przeszkod
                     game.obstacles.addObstacle();
                 }
             },game.timeOut);
-            animatedCharacter();
         },
         addGravity : function (){
             if (game.player.pos < 450){
@@ -99,18 +104,19 @@ window.addEventListener("load", function (){
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
+            result();
+            document.getElementById("game-score").remove();
             clearInterval(game.gameIntervalId);
             document.getElementById("game-container").style.animationPlayState = 'paused';
             document.getElementById("game-background").style.animationPlayState = 'paused';
             clearInterval(game.characterIntervalAnimation);
-            result();
         }
     };
 
     function result() {
         document.getElementById("game-result").style.display = "flex";
         document.getElementById("game-result-score").innerText =
-            "Your score: " + document.getElementById("game-score").innerText
+            document.getElementById("game-score").innerText
     }
     function animatedCharacter() {
         game.characterIntervalAnimation = setInterval(function () {
@@ -138,13 +144,14 @@ window.addEventListener("load", function (){
                 game.player.gameChar.classList.remove("player-animation1")
                 game.player.gameChar.classList.add("player-jumping");
                 let jumpId = setInterval(function (){
+                    jumpingSound()
                     game.player.pos -= 10;
                     game.player.gameChar.style.top = game.player.pos + "px";
-                    if (game.player.pos < 300) {
+                    if (game.player.pos < 275) {
                         clearInterval(jumpId)
                         game.player.jumping = false;
                     }
-                },10);
+                },game.timeOut);
             }
         }
     }
@@ -168,22 +175,31 @@ window.addEventListener("load", function (){
         let gameField = document.getElementById("game-container");
         let obstacle = document.createElement("div");
         gameField.appendChild(obstacle);
-        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-flying"]
-        // obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 3)])
-        obstacle.classList.add("obstacle-flying");
+        let obstacleClasses = ["obstacle-low", "obstacle-high", "obstacle-double", "obstacle-flying"]
+        obstacle.classList.add(obstacleClasses[Math.floor(Math.random() * 4)])
+        // obstacle.classList.add("obstacle-flying");
         return obstacle;
     }
     function isCollision(obstacle) {
         let playerTop = parseInt(getComputedStyle(game.player.gameChar).top)
         if (obstacle.elem.classList.contains("obstacle-flying")
-            && obstacle.pos < -10 && obstacle.pos > -120 && playerTop !== 460
-            && (game.player.pos === 450 || game.player.pos > 430)) {
-            return true;
-        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <= 0 && game.player.pos > 400) {
+            && obstacle.pos <= 20 && playerTop !== 460
+            && (game.player.pos === 450 || game.player.pos >430)) {
+                losingSound()
+                return true;
+        } else if (!obstacle.elem.classList.contains("obstacle-flying") && obstacle.pos <=20 && game.player.pos > 400){
+            losingSound()
             return true;
         }
         return false;
     }
-
+    function jumpingSound() {
+        let audio = new Audio("sounds/jump_two.mp3");
+        audio.play();
+    }
+    function losingSound() {
+        let audio = new Audio("sounds/losing_sound.mp3");
+        audio.play();
+    }
     game.init()
 })
