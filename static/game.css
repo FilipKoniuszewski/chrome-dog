@@ -37,7 +37,6 @@
     100%{background-position: 0 0;}
 }
 #game-result{
-    box-shadow: 10px 10px 5px lightsteelblue;
     font-family: Copperplate, Papyrus, fantasy;
     display: none;
     z-index: 20;
@@ -47,12 +46,19 @@
     width: 36vw;
     height: 40vh;
     border-radius: 10px;
-    background-color: rgba(0,25,255,0.4);
     position: absolute;
     top: 20vh;
     left: 50%;
     transform: translate(-50%,0);
     margin-top: 10px;
+}
+.game-result-day {
+    box-shadow: 10px 10px 5px lightsteelblue;
+    background-color: rgba(0,25,255,0.4);
+}
+.game-result-night {
+    box-shadow: 10px 10px 5px #0e0e0e;
+    background-color: rgba(175, 222, 255, 0.78);
 }
 #game-result-score {
     margin-top: 2vh;
