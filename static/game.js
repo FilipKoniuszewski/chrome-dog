@@ -2,7 +2,6 @@ window.addEventListener("load", function (){
     const game = {
         init: function (){
             this.obstacles.addObstacle();
-            // this.addObstacles();
             this.startGame();
             this.initKeyEvents();
             this.counter.counterInit();
@@ -34,7 +33,6 @@ window.addEventListener("load", function (){
                         clearInterval(game.characterIntervalAnimation);
                         game.timeOut -= 1;
                         game.randomPos.posArray.push(400);
-                        // document.getElementById("game-container").style.animation = "animation 2.5s linear infinite";
                         game.startGame();
                     }
                 },1000)
@@ -43,7 +41,6 @@ window.addEventListener("load", function (){
         obstacles : {
             obstacleArray: [],
             moveObstacle: function (obstacle){
-                // obstacle.pos -= 5;
                 obstacle.pos -= 2;
                 obstacle.elem.style.left = obstacle.pos + "px";
                 let obstacleWidth = parseInt(getComputedStyle(obstacle.elem).width);
@@ -65,7 +62,7 @@ window.addEventListener("load", function (){
                 for (let obstacle of game.obstacles.obstacleArray){
                     widthSum += parseInt(getComputedStyle(obstacle.elem).width);
                 }
-                let pos = 900 - widthSum - parseInt(getComputedStyle(obstacleElem).width);
+                let pos = 900 - widthSum;
                 obstacleElem.style.left = pos + "px";
                 this.obstacleArray.push(new Obstacle(obstacleElem, pos))
             },

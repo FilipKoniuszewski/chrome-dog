@@ -13,7 +13,7 @@
 }
 #game-border{
     z-index: 10;
-    box-shadow: -100px 10px 0px 0px rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 100px rgb(255, 255, 255);
 }
 #game-container {
     display: flex;
