@@ -5,6 +5,17 @@ window.addEventListener("load", function (){
             this.startGame();
             this.initKeyEvents();
             this.counter.counterInit();
+            this.music.startMusic();
+        },
+        music : {
+            elem : document.getElementById("music"),
+            startMusic : function (){
+                this.elem.play();
+                this.elem.volume = 0.08;
+            },
+            stopMusic : function (){
+                this.elem.pause();
+            }
         },
         player : {
             gameChar: document.querySelector(".player"),
@@ -54,6 +65,9 @@ window.addEventListener("load", function (){
                     if (game.gameScore.score === 15) {
                         document.getElementById("game-background").style.background = "url(/static/images/background_night.png) repeat-x 0 / 100% auto";
                         document.getElementById("game-score").style.color = "white";
+                    }
+                    if (game.gameScore.score%5 === 0) {
+                        hitPointsSound()
                     }
                 }
                 if (isCollision(obstacle)){
@@ -114,6 +128,7 @@ window.addEventListener("load", function (){
         },
         gameOver: function (){
             loseSound()
+            game.music.stopMusic();
             window.removeEventListener("keydown", jump)
             window.removeEventListener("keydown", duck)
             window.removeEventListener("keyup", unDuck)
@@ -155,8 +170,8 @@ window.addEventListener("load", function (){
 
     function jump(event) {
         if (event.key === " " || event.key === "ArrowUp"){
-            jumpSound()
             if (game.player.pos === 450) {
+                jumpSound()
                 game.player.jumping = true;
                 game.player.gameChar.classList.remove("player-full");
                 game.player.gameChar.classList.remove("player-animation")
@@ -226,6 +241,10 @@ window.addEventListener("load", function (){
     }
     function jumpSound() {
         let audio = new Audio("static/sounds/jump_one.mp3");
+        audio.play();
+    }
+    function hitPointsSound() {
+        let audio = new Audio("static/sounds/point.mp3");
         audio.play();
     }
     game.init()
