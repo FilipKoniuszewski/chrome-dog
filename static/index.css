@@ -6,7 +6,7 @@ body {
     height: 500px;
     position: absolute;
     left: 50%;
-    top: 30vh;
+    top: 10vh;
     transform: translate(-50%,0);
 }
 #background {
