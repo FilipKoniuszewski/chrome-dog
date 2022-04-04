@@ -1,6 +1,6 @@
 # Freestyle JavaScript Game
 
--Codecool Project
+- Codecool Project
 
 ## Story
 
