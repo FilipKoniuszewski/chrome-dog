@@ -1,5 +1,7 @@
 # Freestyle JavaScript Game
 
+-Codecool Project
+
 ## Story
 
 By now you know the basics of Javascript. Put your knowledge to the test,
