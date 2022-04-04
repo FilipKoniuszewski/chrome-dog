@@ -12,7 +12,7 @@ Wait for it...
 
 Any kind :) Your creativity (and your JavaScript knowledge) is the only limit.
 
-## What are you going to learn?
+## What have we Learned?
 
 - Finding DOM elements in the document tree.
 - Manipulate the DOM using JavaScript.
